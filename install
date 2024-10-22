@@ -541,11 +541,8 @@ wo_install() {
         fi
     fi
 
-    if [ "$wo_branch" = "master" ]; then
-        /opt/wo/bin/pip install -U wordops --upgrade-strategy=eager
-    else
-        /opt/wo/bin/pip install -I "git+https://github.com/WordOps/WordOps.git@$wo_branch#egg=wordops" --upgrade-strategy=eager
-    fi
+    /opt/wo/bin/pip install -U /path/to/local/wordops --upgrade-strategy=eager
+
     local python_venv
     python_venv=$(python3 -c "import sys; print(sys.version_info[1])")
     cp -rf /opt/wo/lib/python3."$python_venv"/site-packages/usr/* /usr/
@@ -904,7 +901,6 @@ else
         fi
 
     fi
-    _run wo_install_dep "Installing wo dependencies"
     _run wo_timesync
     # skip steps if travis
     if [ -z "$wo_travis" ]; then
@@ -918,9 +914,9 @@ else
         _run wo_upgrade_nginx "Upgrading Nginx"
         _run wo_clean_ee "Cleaning previous EasyEngine install"
     fi
-    _run wo_install_acme_sh "Running post-install steps"
+    #_run wo_install_acme_sh "Running post-install steps"
     _run wo_domain_suffix
-    _run wo_update_wp_cli
+    #_run wo_update_wp_cli
     _run wo_update_latest
     _run secure_wo_db
 
