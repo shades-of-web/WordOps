@@ -808,11 +808,6 @@ wo_init() {
     ###
 
     if [ -z "$wo_travis" ]; then
-        if ! {
-            apt-get update --allow-releaseinfo-change -qq >/dev/null 2>&1
-        }; then
-            apt-get update -qq >/dev/null 2>&1
-        fi
         if ! command_exists curl; then
             apt-get -y install curl -qq >/dev/null 2>&1
         fi
