@@ -91,19 +91,34 @@ wo_install() {
     local python_ver
     python_ver=$(python3 -c "import sys; print(sys.version_info[1])")
     
+    echo "Removing existing WordOps installation directory..."
     rm -rf /opt/wo
+
+    echo "Creating new Python virtual environment for WordOps..."
     python3 -m venv /opt/wo
+
+    echo "Activating the virtual environment..."
     source /opt/wo/bin/activate
+
+    echo "Upgrading essential Python packages..."
     /opt/wo/bin/pip install -U setuptools pip wheel distro
 
+    echo "Installing WordOps from GitHub repository..."
     /opt/wo/bin/pip install -U git+https://github.com/WordOps/WordOps.git@$wo_branch#egg=wordops --upgrade-strategy=eager
 
+    echo "Copying WordOps files to system directories..."
     cp -rf /opt/wo/lib/python3."$python_ver"/site-packages/usr/* /usr/
     cp -rn /opt/wo/lib/python3."$python_ver"/site-packages/etc/* /etc/
     cp -f /opt/wo/lib/python3."$python_ver"/site-packages/etc/bash_completion.d/wo_auto.rc /etc/bash_completion.d/wo_auto.rc
+
+    echo "Setting up WordOps command..."
     rm -f /usr/local/bin/wo
     ln -s /opt/wo/bin/wo /usr/local/bin/
+
+    echo "Deactivating virtual environment..."
     deactivate
+
+    echo "WordOps installation completed."
 }
 
 wo_backup_wo() {
